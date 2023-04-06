@@ -1,7 +1,74 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <script src="https://core.spreedly.com/iframe/iframe-v1.min.js"></script>
+</head>
 <body>
 <h1>Hello World</h1>
 <p>I'm hosted with GitHub Pages.</p>
+<form id="payment-form"
+  action="https://adrianhchan.github.io/index.html"
+  onsubmit='submitPaymentForm(); return false;'>
+
+  <input type="hidden"  name="payment_method_token" id="payment_method_token">
+
+  <label for="full_name">Name</label>
+  <input type="text" id="full_name" name="full_name"><br/>
+
+  <label>Credit Card Number</label>
+  <div id="spreedly-number" style="width:225px; height:35px; border: 2px solid"></div><br/>
+
+  <label for="month">Expiration Date</label>
+  <input type="text" id="month" name="month" maxlength="2">
+  <input type="text" id="year" name="year" maxlength="4"><br/>
+
+  <label>CVV</label>
+  <div id="spreedly-cvv" style="width:60px; height:35px; border: 2px solid "></div><br/>
+
+  <input id="submit-button" type="submit" value="Pay Now" disabled>
+
+</form>
+
+<script>
+Spreedly.init("W3MVUb3mDi0Q03fig809BPVZxnB", {
+  "numberEl": "spreedly-number",
+  "cvvEl": "spreedly-cvv"
+});
+
+Spreedly.on("ready", function () {
+  var submitButton = document.getElementById('submit-button');
+  submitButton.disabled = false;
+});
+
+function submitPaymentForm() {
+
+  var requiredFields = {};
+
+  // Get required, non-sensitive, values from host page
+  requiredFields["full_name"] = document.getElementById("full_name").value;
+  requiredFields["month"] = document.getElementById("month").value;
+  requiredFields["year"] = document.getElementById("year").value;
+
+  Spreedly.tokenizeCreditCard(requiredFields);
+}
+
+Spreedly.on('errors', function(errors) {
+  for (var i=0; i < errors.length; i++) {
+    var error = errors[i];
+    console.log(error);
+  };
+});
+
+Spreedly.on('paymentMethod', function(token, pmData) {
+
+  // Set the token in the hidden form field
+  var tokenField = document.getElementById("payment_method_token");
+  tokenField.setAttribute("value", token);
+
+  // Submit the form
+  var masterForm = document.getElementById('payment-form');
+  masterForm.submit();
+});
+</script>
 </body>
 </html>
