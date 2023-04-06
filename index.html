@@ -22,7 +22,7 @@
 <p>I'm hosted with GitHub Pages.</p>
 
 <form id="payment-form" action="https://yoursite.com/checkout">
-  <input type="hidden" name="payment_method_token" id="payment_method_token">
+  <input type="text" name="payment_method_token" id="payment_method_token">
   <input type="button" value="Enter Payment Info" onclick="SpreedlyExpress.openView();">
 </form>
 
@@ -35,7 +35,7 @@
   tokenField.setAttribute("value", token);
 
   var masterForm = document.getElementById('payment-form');
-  masterForm.submit();
+  //masterForm.submit();
 });
 </script>
 
